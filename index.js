@@ -6,13 +6,13 @@ const connectDB = require('./db')
 
 
 dotenv.config()
-
-// connectDB()
+connectDB()
 app.use(express.json())
 app.use(express.urlencoded({
     extended: false
 }));
 app.use(cors())
+
 
 PORT = process.env.PORT || 8080
 

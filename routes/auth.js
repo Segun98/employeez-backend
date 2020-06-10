@@ -6,7 +6,13 @@ const {
     loginValidation
 } = require("../joivalidate")
 const bcrypt = require("bcryptjs")
-const {createToken, createRefreshToken} = require("../createtokens")
+const {
+    createToken,
+    createRefreshToken
+} = require("../createtokens")
+const jwt = require("jsonwebtoken")
+const cookieParser = require('cookie-parser')
+
 
 router.post("/register", async (req, res) => {
     const validation = registerValidation(req.body)
@@ -40,8 +46,7 @@ router.post("/register", async (req, res) => {
         })
         return res.status(200).json({
             status: true,
-            message: "sign up successful",
-            data: user
+            message: "sign up successful"
         })
 
     } catch (err) {
@@ -74,11 +79,13 @@ router.post("/login", async (req, res) => {
         if (!validPass) {
             return res.status(400).send("Invalid Password")
         }
-
-        //imports
+        let date = new Date()
+        date.setDate(date.getDate() + 7);
+        //imports to create tokens
         const token = createToken(user)
         res.cookie('yeez', createRefreshToken(user), {
-            httpOnly: true
+            httpOnly: true,
+            expires: date
         })
         res.status(200).send({
             success: true,
@@ -93,4 +100,57 @@ router.post("/login", async (req, res) => {
 
 })
 
+//refresh tokens after access token expires
+router.post("/refreshtokens", cookieParser(), async (req, res) => {
+
+    const token = req.cookies.yeez
+
+    if (!token) {
+        return res.status(401).send({
+            success: false,
+            acessToken: ""
+        })
+    }
+    let payload = null
+    try {
+        payload = jwt.verify(token, process.env.REFRESH_SECRET)
+    } catch (err) {
+        return res.status(401).send({
+            success: false,
+            acessToken: "",
+            err
+        })
+    }
+    const user = await Users.findOne({
+        _id: payload.user_id
+    })
+
+    if (!user) {
+        return res.status(401).send({
+            success: false,
+            acessToken: ""
+        })
+    }
+    let date = new Date()
+    date.setDate(date.getDate() + 7);
+    res.cookie('yeez', createRefreshToken(user), {
+        httpOnly: true,
+        expires: date
+    })
+ 
+    return res.status(200).send({
+        success: true,
+        acessToken: createToken(user)
+    })
+
+})
+
+router.post("/logout", async (req, res, next) => {
+    await res.clearCookie('yeez');
+    next()
+    return res.status(200).send({
+        message: "Logged out"
+    })
+
+})
 module.exports = router

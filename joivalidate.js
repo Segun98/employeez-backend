@@ -1,5 +1,7 @@
 const Joi = require('@hapi/joi')
 
+
+//Login and signup input checks/validation
 const registerValidation = (data) => {
     const schema = Joi.object({
         organisation_name: Joi.string().required().min(6),

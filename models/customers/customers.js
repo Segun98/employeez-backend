@@ -5,6 +5,11 @@ const Customers = new mongoose.Schema({
         type: String,
         required: true
     },
+    name_url:{
+        type: String,
+        required: true,
+        trim: true
+    },
     customer_name: {
         type: String,
         required: true,

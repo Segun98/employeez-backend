@@ -2,15 +2,17 @@ const jwt = require("jsonwebtoken")
 
 const createToken = (user) => {
     return jwt.sign({
-        user_id: user._id
+        user_id: user._id,
+        email_id: user.email
     }, process.env.TOKEN_SECRET, {
-        expiresIn: "10m"
+        expiresIn: "5m"
     })
 }
 
 const createRefreshToken = (user) => {
     return jwt.sign({
-        user_id: user._id
+        user_id: user._id,
+        email_id: user.email
     }, process.env.REFRESH_SECRET, {
         expiresIn: "7d"
     })
@@ -28,9 +30,10 @@ const verifyJwt = (req, res, next) => {
         next()
     } catch (err) {
         res.status(401).send(err)
-
+ 
     }
 }
+
 
 module.exports.createToken = createToken
 module.exports.createRefreshToken = createRefreshToken

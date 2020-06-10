@@ -10,6 +10,11 @@ const Employees = new mongoose.Schema({
         required: true,
         trim: true
     },
+    name_url:{
+        type: String,
+        required: true,
+        trim: true
+    },
     email: {
         type: String,
         required: true,
@@ -61,10 +66,6 @@ const Employees = new mongoose.Schema({
     notes: {
         type: String,
         trim: true
-    },
-    sacked: {
-        type: Boolean,
-        default: false
     },
     createdAt: {
         type: Date,
