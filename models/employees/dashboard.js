@@ -17,11 +17,13 @@ const Dashboard = new mongoose.Schema({
     },
     about: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
-    Values: {
+    values: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     createdAt: {
         type: Date,

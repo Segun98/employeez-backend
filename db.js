@@ -6,6 +6,7 @@ const connectDB = async () => {
           useNewUrlParser: true,
           useCreateIndex: true,
           useUnifiedTopology: true,
+          useFindAndModify: false
       });
 
       console.log(`Mongoose connect to ${conn.connection.host} `);

@@ -5,7 +5,7 @@ const createToken = (user) => {
         user_id: user._id,
         email_id: user.email
     }, process.env.TOKEN_SECRET, {
-        expiresIn: "5m"
+        expiresIn: "15m"
     })
 }
 

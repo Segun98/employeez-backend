@@ -4,6 +4,7 @@ const {
     verifyJwt
 } = require("../createtokens")
 const Employees = require("../models/employees/employees")
+const Dashboard = require("../models/employees/dashboard")
 
 
 //gets all employees
@@ -161,14 +162,86 @@ router.delete("/employees/remove/:id", verifyJwt, async (req, res) => {
     }
 })
 
-// gets dashboard
-router.get("/dashboard", verifyJwt, async (req, res) => {
 
+//add dashboard items
+router.post("/dashboard/add", verifyJwt, async (req, res) => {
+    const {
+        mission,
+        vision,
+        about,
+        values
+    } = req.body
+
+    try {
+        let dashboard = await Dashboard.create({
+            ORG_ID: req.payload.email_id,
+            mission,
+            vision,
+            about,
+            values
+        })
+        return res.status(200).json({
+            status: true,
+            message: "Dashboard successfuly added"
+        })
+
+    } catch (err) {
+        return res.status(400).send(err.message)
+    }
 })
 
-//edit dashboard
-router.post("/dashboard/update", verifyJwt, async (req, res) => {
 
+
+// gets dashboard, loads after user creates dashboard
+router.get("/dashboard", verifyJwt, async (req, res) => {
+    try {
+        const dashboard = await Dashboard.findOne({
+            ORG_ID: req.payload.email_id
+        })
+        return res.status(200).send({
+            success: true,
+            message: "successfuly fetched dashboard",
+            data: dashboard
+        })
+
+    } catch (err) {
+        return res.status(500).send({
+            success: false,
+            message: err,
+            data: {}
+        })
+    }
+})
+
+//update dashboard
+router.post("/dashboard/update", verifyJwt, async (req, res) => {
+    const {
+        mission,
+        vision,
+        about,
+        values
+    } = req.body
+    try {
+        await Dashboard.findOneAndUpdate({
+            ORG_ID: req.payload.email_id
+        }, {
+            $set: {
+                mission,
+                vision,
+                about,
+                values
+            }
+        });
+        return res.status(200).send({
+            success: true,
+            message: "Dashboard successfully updated",
+        })
+    } catch (err) {
+        return res.status(500).send({
+            success: false,
+            message: err
+        })
+    }
 })
 
 
