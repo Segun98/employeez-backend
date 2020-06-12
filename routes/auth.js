@@ -18,7 +18,7 @@ router.post("/register", async (req, res) => {
     const validation = registerValidation(req.body)
 
     if (validation.error) {
-        return res.status(400).send(validation.error.details[0].message)
+        return res.send(validation.error.details[0].message)
     }
 
     const {
@@ -32,22 +32,19 @@ router.post("/register", async (req, res) => {
     })
 
     if (emailExists) {
-        return res.status(400).send("email already exists")
+        return res.send("email already exists")
     }
     //hash password
     const salt = await bcrypt.genSalt(10)
     const hashedpassword = await bcrypt.hash(password, salt)
 
     try {
-        let user = await Users.create({
+        await Users.create({
             organisation_name,
             email,
             password: hashedpassword
         })
-        return res.status(200).json({
-            status: true,
-            message: "sign up successful"
-        })
+        return res.status(200).send("sign up successful")
 
     } catch (err) {
         res.status(400).send(err.message)
@@ -59,7 +56,7 @@ router.post("/login", async (req, res) => {
     const validation = loginValidation(req.body)
 
     if (validation.error) {
-        return res.status(400).send(validation.error.details[0].message)
+        return res.send(validation.error.details[0].message)
     }
 
     const {
@@ -73,11 +70,11 @@ router.post("/login", async (req, res) => {
         })
 
         if (!user) {
-            return res.status(400).send("email or password is wrong")
+            return res.send("email or password is wrong")
         }
         const validPass = await bcrypt.compare(password, user.password)
         if (!validPass) {
-            return res.status(400).send("Invalid Password")
+            return res.send("Invalid Password")
         }
         let date = new Date()
         date.setDate(date.getDate() + 7);
@@ -87,8 +84,7 @@ router.post("/login", async (req, res) => {
             httpOnly: true,
             expires: date
         })
-        res.status(200).send({
-            success: true,
+        res.send({
             message: "successfully logged in",
             accesstoken: token
         })
@@ -108,7 +104,7 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
     if (!token) {
         return res.status(401).send({
             success: false,
-            acessToken: ""
+            accessToken: ""
         })
     }
     let payload = null
@@ -117,7 +113,7 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
     } catch (err) {
         return res.status(401).send({
             success: false,
-            acessToken: "",
+            accessToken: "",
             err
         })
     }
@@ -128,7 +124,7 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
     if (!user) {
         return res.status(401).send({
             success: false,
-            acessToken: ""
+            accessToken: ""
         })
     }
     let date = new Date()
@@ -137,10 +133,10 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
         httpOnly: true,
         expires: date
     })
- 
+
     return res.status(200).send({
         success: true,
-        acessToken: createToken(user)
+        accessToken: createToken(user)
     })
 
 })

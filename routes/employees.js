@@ -11,6 +11,7 @@ const Dashboard = require("../models/employees/dashboard")
 router.get("/employees", verifyJwt, async (req, res) => {
     try {
         const employees = await Employees.find()
+        
         return res.status(200).send({
             success: true,
             message: "employees successfully fetched",
