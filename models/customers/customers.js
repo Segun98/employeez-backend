@@ -17,31 +17,38 @@ const Customers = new mongoose.Schema({
     },
     email: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     address: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     DOB: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     phone_number: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     occupation: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     gender: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     notes: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     createdAt: {
         type: Date,

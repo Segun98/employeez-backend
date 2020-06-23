@@ -11,7 +11,7 @@ const Dashboard = require("../models/employees/dashboard")
 router.get("/employees", verifyJwt, async (req, res) => {
     try {
         const employees = await Employees.find()
-        
+
         return res.status(200).send({
             success: true,
             message: "employees successfully fetched",
@@ -41,7 +41,8 @@ router.post("/employees/add", verifyJwt, async (req, res) => {
         gender,
         phone_number,
         DOB,
-        notes
+        notes,
+        picture
     } = req.body
 
     try {
@@ -60,7 +61,8 @@ router.post("/employees/add", verifyJwt, async (req, res) => {
             gender,
             phone_number,
             DOB,
-            notes
+            notes,
+            picture
         })
         return res.status(200).json({
             status: true,
@@ -110,7 +112,8 @@ router.post("/employee/profile/:id", verifyJwt, async (req, res) => {
         gender,
         phone_number,
         DOB,
-        notes
+        notes,
+        picture
     } = req.body
     try {
         await Employees.findOneAndUpdate({
@@ -129,7 +132,8 @@ router.post("/employee/profile/:id", verifyJwt, async (req, res) => {
                 gender,
                 phone_number,
                 DOB,
-                notes
+                notes,
+                picture
             }
         });
         return res.status(200).send({
@@ -140,6 +144,44 @@ router.post("/employee/profile/:id", verifyJwt, async (req, res) => {
         return res.status(500).send({
             success: false,
             message: err
+        })
+    }
+
+})
+
+
+// search employees
+router.get("/employee/search/:id", verifyJwt, async (req, res) => {
+    try {
+        const employees = await Employees.find({
+            $or: [{
+                    employee_name: {
+                        $regex: req.params.id,
+                        $options: 'i'
+                    }
+                }, {
+                    classification: {
+                        $regex: req.params.id,
+                        $options: 'i'
+                    }
+                },
+                {
+                    job_title: {
+                        $regex: req.params.id,
+                        $options: 'i'
+                    }
+                },
+
+            ]
+        })
+        return res.status(200).send({
+            success: true,
+            message: "seacrh query result",
+            data: employees.filter(employee => employee.ORG_ID === req.payload.email_id)
+        })
+    } catch (error) {
+        return res.status(400).send({
+            error
         })
     }
 
@@ -170,16 +212,16 @@ router.post("/dashboard/add", verifyJwt, async (req, res) => {
         mission,
         vision,
         about,
-        values
+        todo
     } = req.body
 
     try {
-        let dashboard = await Dashboard.create({
+        await Dashboard.create({
             ORG_ID: req.payload.email_id,
             mission,
             vision,
             about,
-            values
+            todo
         })
         return res.status(200).json({
             status: true,
@@ -220,7 +262,7 @@ router.post("/dashboard/update", verifyJwt, async (req, res) => {
         mission,
         vision,
         about,
-        values
+        todo
     } = req.body
     try {
         await Dashboard.findOneAndUpdate({
@@ -230,7 +272,7 @@ router.post("/dashboard/update", verifyJwt, async (req, res) => {
                 mission,
                 vision,
                 about,
-                values
+                todo
             }
         });
         return res.status(200).send({

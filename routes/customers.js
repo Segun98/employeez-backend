@@ -23,6 +23,43 @@ router.get("/customers", verifyJwt, async (req, res) => {
     }
 })
 
+// search employees
+router.get("/customer/search/:id", verifyJwt, async (req, res) => {
+    try {
+        const customers = await Customers.find({
+            $or: [{
+                    customer_name: {
+                        $regex: req.params.id,
+                        $options: 'i'
+                    }
+                }, {
+                    occupation: {
+                        $regex: req.params.id,
+                        $options: 'i'
+                    }
+                },
+                {
+                    gender: {
+                        $regex: req.params.id,
+                        $options: 'i'
+                    }
+                },
+
+            ]
+        })
+        return res.status(200).send({
+            success: true,
+            message: "seacrh query result",
+            data: customers.filter(customer => customer.ORG_ID === req.payload.email_id)
+        })
+    } catch (error) {
+        return res.status(400).send({
+            error
+        })
+    }
+
+})
+
 //add a new customer
 router.post("/customers/add", verifyJwt, async (req, res) => {
     const {

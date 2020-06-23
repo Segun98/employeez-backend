@@ -10,7 +10,7 @@ const Employees = new mongoose.Schema({
         required: true,
         trim: true
     },
-    name_url:{
+    name_url: {
         type: String,
         required: true,
         trim: true
@@ -25,6 +25,11 @@ const Employees = new mongoose.Schema({
         required: true,
         trim: true
     },
+    picture: {
+        type: String,
+        trim: true,
+        default: ""
+    },
     date_of_employment: {
         type: String,
         required: true,
@@ -37,13 +42,15 @@ const Employees = new mongoose.Schema({
     },
     work_location: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     address: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
-    employee_classification: {
+    classification: {
         type: String,
         trim: true
     },
@@ -57,15 +64,23 @@ const Employees = new mongoose.Schema({
     },
     phone_number: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     DOB: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
     },
     notes: {
         type: String,
-        trim: true
+        trim: true,
+        default: ""
+    },
+    benefits: {
+        type: String,
+        trim: true,
+        default: ""
     },
     createdAt: {
         type: Date,

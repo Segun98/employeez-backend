@@ -5,25 +5,21 @@ const Dashboard = new mongoose.Schema({
         type: String,
         required: true
     },
+    todo: {
+        type: String,
+        trim: true
+    },
     mission: {
         type: String,
-        required: true,
         trim: true
     },
     vision: {
         type: String,
-        required: true,
         trim: true
-    },
+    }, 
     about: {
         type: String,
-        trim: true,
-        required: true
-    },
-    values: {
-        type: String,
-        trim: true,
-        required: true
+        trim: true
     },
     createdAt: {
         type: Date,
