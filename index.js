@@ -18,11 +18,11 @@ app.use(express.urlencoded({
     extended: false
 }));
 app.use(cors({
-    origin: 'https://employeez.vercel.app/',
+    origin: 'https://employeez.vercel.app',
     credentials: true
 }))
 // 'http://localhost:3000'
-// 'https://employeez.vercel.app/'
+// 'https://employeez.vercel.app'
 
 
 PORT = process.env.PORT || 8080
