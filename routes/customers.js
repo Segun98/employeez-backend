@@ -24,7 +24,7 @@ router.get("/customers", verifyJwt, async (req, res) => {
 })
 
 // search employees
-router.get("/customer/search/:id", verifyJwt, async (req, res) => {
+router.get("/customers/search/:id", verifyJwt, async (req, res) => {
     try {
         const customers = await Customers.find({
             $or: [{

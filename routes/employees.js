@@ -193,7 +193,7 @@ router.get("/employees/search/:id", verifyJwt, async (req, res) => {
 })
 
 //fires an employee
-router.delete("/employees/remove/:id", verifyJwt, async (req, res) => {
+router.delete("/employee/remove/:id", verifyJwt, async (req, res) => {
     try {
         const employee = await Employees.findOne({
             name_url: req.params.id
