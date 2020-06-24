@@ -10,7 +10,7 @@ const Customers = new mongoose.Schema({
         required: true,
         trim: true
     },
-    customer_name: {
+    name: {
         type: String,
         required: true,
         trim: true
@@ -30,7 +30,7 @@ const Customers = new mongoose.Schema({
         trim: true,
         default: ""
     },
-    phone_number: {
+    phone: {
         type: String,
         trim: true,
         default: ""

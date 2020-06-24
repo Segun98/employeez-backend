@@ -5,7 +5,7 @@ const Employees = new mongoose.Schema({
         type: String,
         required: true
     },
-    employee_name: {
+    name: {
         type: String,
         required: true,
         trim: true
@@ -30,17 +30,17 @@ const Employees = new mongoose.Schema({
         trim: true,
         default: ""
     },
-    date_of_employment: {
+    hireDate: {
         type: String,
         required: true,
         trim: true
     },
-    job_title: {
+    title: {
         type: String,
         required: true,
         trim: true
     },
-    work_location: {
+    workLocation: {
         type: String,
         trim: true,
         default: ""
@@ -62,12 +62,12 @@ const Employees = new mongoose.Schema({
         type: String,
         trim: true
     },
-    phone_number: {
+    phone: {
         type: String,
         trim: true,
         default: ""
     },
-    DOB: {
+    dob: {
         type: String,
         trim: true,
         default: ""

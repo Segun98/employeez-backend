@@ -28,41 +28,43 @@ router.get("/employees", verifyJwt, async (req, res) => {
 //add a new employee
 router.post("/employees/add", verifyJwt, async (req, res) => {
     const {
-        employee_name,
+        name,
         name_url,
         email,
         department,
-        date_of_employment,
-        job_title,
-        work_location,
+        hireDate,
+        title,
+        workLocation,
         address,
-        employee_classification,
+        classification,
         salary,
         gender,
-        phone_number,
-        DOB,
+        phone,
+        dob,
         notes,
-        picture
+        picture,
+        benefits
     } = req.body
 
     try {
         let employees = await Employees.create({
             ORG_ID: req.payload.email_id,
-            employee_name,
+            name,
             name_url,
             email,
             department,
-            date_of_employment,
-            job_title,
-            work_location,
+            hireDate,
+            title,
+            workLocation,
             address,
-            employee_classification,
+            classification,
             salary,
             gender,
-            phone_number,
-            DOB,
+            phone,
+            dob,
             notes,
-            picture
+            picture,
+            benefits
         })
         return res.status(200).json({
             status: true,
@@ -100,41 +102,44 @@ router.get("/employee/profile/:id", verifyJwt, async (req, res) => {
 router.post("/employee/profile/:id", verifyJwt, async (req, res) => {
 
     const {
-        employee_name,
+        name,
         email,
         department,
-        date_of_employment,
-        job_title,
-        work_location,
+        hireDate,
+        title,
+        workLocation,
         address,
-        employee_classification,
+        classification,
         salary,
         gender,
-        phone_number,
-        DOB,
+        phone,
+        dob,
         notes,
-        picture
+        picture,
+        benefits
     } = req.body
     try {
         await Employees.findOneAndUpdate({
             name_url: req.params.id
         }, {
             $set: {
-                employee_name,
+                name,
                 email,
                 department,
-                date_of_employment,
-                job_title,
-                work_location,
+                hireDate,
+                title,
+                workLocation,
                 address,
-                employee_classification,
+                classification,
                 salary,
                 gender,
-                phone_number,
-                DOB,
+                phone,
+                dob,
                 notes,
-                picture
-            }
+                picture,
+                benefits
+            },
+
         });
         return res.status(200).send({
             success: true,
@@ -151,11 +156,11 @@ router.post("/employee/profile/:id", verifyJwt, async (req, res) => {
 
 
 // search employees
-router.get("/employee/search/:id", verifyJwt, async (req, res) => {
+router.get("/employees/search/:id", verifyJwt, async (req, res) => {
     try {
         const employees = await Employees.find({
             $or: [{
-                    employee_name: {
+                    name: {
                         $regex: req.params.id,
                         $options: 'i'
                     }
@@ -166,7 +171,7 @@ router.get("/employee/search/:id", verifyJwt, async (req, res) => {
                     }
                 },
                 {
-                    job_title: {
+                    title: {
                         $regex: req.params.id,
                         $options: 'i'
                     }

@@ -28,7 +28,7 @@ router.get("/customer/search/:id", verifyJwt, async (req, res) => {
     try {
         const customers = await Customers.find({
             $or: [{
-                    customer_name: {
+                    name: {
                         $regex: req.params.id,
                         $options: 'i'
                     }
@@ -63,12 +63,12 @@ router.get("/customer/search/:id", verifyJwt, async (req, res) => {
 //add a new customer
 router.post("/customers/add", verifyJwt, async (req, res) => {
     const {
-        customer_name,
+        name,
         email,
         name_url,
         address,
         DOB,
-        phone_number,
+        phone,
         occupation,
         gender,
         notes
@@ -76,12 +76,12 @@ router.post("/customers/add", verifyJwt, async (req, res) => {
     try {
         let customer = await Customers.create({
             ORG_ID: req.payload.email_id,
-            customer_name,
+            name,
             name_url,
             email,
             address,
             DOB,
-            phone_number,
+            phone,
             occupation,
             gender,
             notes
@@ -124,11 +124,11 @@ router.get("/customer/profile/:id", verifyJwt, async (req, res) => {
 router.post("/customer/profile/:id", verifyJwt, async (req, res) => {
 
     const {
-        customer_name,
+        name,
         email,
         address,
         DOB,
-        phone_number,
+        phone,
         occupation,
         gender,
         notes
@@ -138,11 +138,11 @@ router.post("/customer/profile/:id", verifyJwt, async (req, res) => {
             name_url: req.params.id
         }, {
             $set: {
-                customer_name,
+                name,
                 email,
                 address,
                 DOB,
-                phone_number,
+                phone,
                 occupation,
                 gender,
                 notes
