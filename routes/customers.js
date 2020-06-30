@@ -73,11 +73,16 @@ router.post("/customers/add", verifyJwt, async (req, res) => {
         gender,
         notes
     } = req.body
+
+    let customerExists = await Customers.findOne({
+        name_url: name_url
+    })
+    let random = Math.floor(Math.random() * 448994)
     try {
         let customer = await Customers.create({
             ORG_ID: req.payload.email_id,
             name,
-            name_url,
+            name_url: `${customerExists? name_url+random : name_url}`,
             email,
             address,
             DOB,
