@@ -4,6 +4,7 @@ const sgMail = require('@sendgrid/mail');
 
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
+//bulk and direct email to employees , "to" is the org email
 router.post("/sendmails", async (req, res) => {
    const {
       to,
@@ -42,10 +43,10 @@ router.post("/acknowledge", async (req, res) => {
       html: `<div style="color: rgb(51, 62, 99)">
       <h3>Hello ${user},</h3>
       <h3>You Have Successfully Signed Up On <strong style="color:purple">Employeez!</strong></h3>
-      <h3>Manage Your Employees and Customers With Less Paperwork, Spend More Time Running Your Business.</h3>
+      <h3>You Can Now Spend Less Time Managing Your Employees and Customers and Spend More Time Running Your Business.</h3>
       <br>
-      <h3>Please Read Our Privacy Policy <a href="https://employeez.now.sh/about#privacy}">Here</a></h3>
-      <h3>I Would Love A Feedback On Your Experience So Far On The platform, Please Do Share Under This Email.</h3>
+      <h3>Please Read Our Privacy Policy <a href="https://employeez.vercel.app/about#privacy">Click Here</a></h3>
+      <h3>If You Need Help Setting Up, Reply Under This Email.</h3>
       <br>
       <p>Regards,</p>
       <h3>Segun Olanitori.</h3>

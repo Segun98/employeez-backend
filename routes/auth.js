@@ -83,7 +83,7 @@ router.post("/login", async (req, res) => {
         res.cookie('yeez', createRefreshToken(user), {
             httpOnly: true,
             expires: date,
-            // secure: true
+            secure: true
         })
         res.send({
             message: "successfully logged in",
@@ -133,7 +133,7 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
     res.cookie('yeez', createRefreshToken(user), {
         httpOnly: true,
         expires: date,
-        // secure: true
+        secure: true
     })
 
     return res.status(200).send({

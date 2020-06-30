@@ -18,7 +18,7 @@ app.use(express.urlencoded({
     extended: false
 }));
 app.use(cors({
-    origin: 'https://employeez.vercel.app',
+    origin: 'http://localhost:3000',
     credentials: true
 }))
 // 'http://localhost:3000'
@@ -33,9 +33,9 @@ const auth = require("./routes/auth")
 const sendmail = require("./routes/sendmail")
 
 // app.post('/upload', multerUploads, (req, res) => {  
-  
+
 //     const file = dataUri(req).content;
-      
+
 //       const data = {
 //         image: file,
 //       }
