@@ -46,11 +46,16 @@ router.post("/employees/add", verifyJwt, async (req, res) => {
         benefits
     } = req.body
 
+    let employeeExists = await Employees.findOne({
+        name_url: name_url
+    })
+    let random = Math.floor(Math.random() * 448994)
+
     try {
         let employees = await Employees.create({
             ORG_ID: req.payload.email_id,
             name,
-            name_url,
+            name_url: `${employeeExists? name_url+random : name_url}`,
             email,
             department,
             hireDate,
