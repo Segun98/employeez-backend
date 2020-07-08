@@ -5,12 +5,26 @@ const {
 } = require("../createtokens")
 const Employees = require("../models/employees/employees")
 const Dashboard = require("../models/employees/dashboard")
+const {
+    dataUri,
+    multerUploads
+} = require("../multer")
+const cloudinary = require('cloudinary').v2
+
+cloudinary.config({
+    cloud_name: process.env.SEND_GRID_KEY,
+    api_key: process.env.API_KEY,
+    api_secret: process.API_SECRET
+});
+
 
 
 //gets all employees
 router.get("/employees", verifyJwt, async (req, res) => {
     try {
-        const employees = await Employees.find()
+        const employees = await Employees.find().sort({
+            createdAt: "desc"
+        })
 
         return res.status(200).send({
             success: true,
@@ -296,6 +310,21 @@ router.post("/dashboard/update", verifyJwt, async (req, res) => {
         })
     }
 })
+
+router.post('/upload', multerUploads, (req, res) => {
+    if (!req.file) {
+        return null
+    }
+    const file = dataUri(req).content;
+    const data = {
+        image: file,
+    }
+    cloudinary.uploader.upload(data.image)
+        .then(result => {
+            res.send(result.url)
+        })
+        .catch(err => res.send(err))
+});
 
 
 module.exports = router

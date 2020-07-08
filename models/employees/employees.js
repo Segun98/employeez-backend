@@ -52,15 +52,18 @@ const Employees = new mongoose.Schema({
     },
     classification: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     salary: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     gender: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     phone: {
         type: String,

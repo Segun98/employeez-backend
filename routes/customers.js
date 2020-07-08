@@ -9,7 +9,9 @@ const Customers = require("../models/customers/customers")
 //gets all customers
 router.get("/customers", verifyJwt, async (req, res) => {
     try {
-        const customers = await Customers.find()
+        const customers = await Customers.find().sort({
+            createdAt: "desc"
+        })
         return res.status(200).send({
             success: true,
             message: "customers successfully fetched",

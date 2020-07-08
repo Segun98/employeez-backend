@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "apiemployeez",
+  "public": true,
+  "builds": [{ "src": "/index.js", "use": "@now/node-server" }],
+  "routes": [{ "src": "/api/.*", "dest": "/index.js" }]
+}
