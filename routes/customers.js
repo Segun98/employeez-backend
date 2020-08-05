@@ -8,15 +8,17 @@ const Customers = require("../models/customers/customers")
 
 //gets all customers
 router.get("/customers", verifyJwt, async (req, res) => {
+    //req.payload is from token
     try {
-        const customers = await Customers.find().sort({
+        const customers = await Customers.find({
+            ORG_ID: req.payload.email_id
+        }).sort({
             createdAt: "desc"
         })
         return res.status(200).send({
             success: true,
             message: "customers successfully fetched",
-            //req.payload is from token
-            data: customers.filter(customer => customer.ORG_ID === req.payload.email_id)
+            data: customers
         })
     } catch (error) {
         return res.status(400).send({
@@ -107,10 +109,18 @@ router.post("/customers/add", verifyJwt, async (req, res) => {
 // get one customer
 router.get("/customer/profile/:id", verifyJwt, async (req, res) => {
 
+
     try {
         const customer = await Customers.findOne({
             name_url: req.params.id
         })
+        if (customer.ORG_ID !== req.payload.email_id) {
+            return res.send(res.send({
+                success: false,
+                message: "no employee",
+                data: ""
+            }))
+        }
         return res.status(200).send({
             success: true,
             message: "successfuly fetched customer",
@@ -118,10 +128,10 @@ router.get("/customer/profile/:id", verifyJwt, async (req, res) => {
         })
 
     } catch (err) {
-        return res.status(500).send({
+        return res.send({
             success: false,
             message: err,
-            data: {}
+            data: ""
         })
     }
 
@@ -173,6 +183,9 @@ router.delete("/customer/remove/:id", verifyJwt, async (req, res) => {
         const customer = await Customers.findOne({
             name_url: req.params.id
         })
+        if (customer.ORG_ID !== req.payload.email_id) {
+            return null
+        }
         await customer.remove()
         return res.status(200).send({
             message: "customer deleted"

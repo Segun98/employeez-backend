@@ -12,25 +12,27 @@ const {
 const cloudinary = require('cloudinary').v2
 
 cloudinary.config({
-    cloud_name: process.env.SEND_GRID_KEY,
+    cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
-    api_secret: process.API_SECRET
+    api_secret: process.env.API_SECRET
 });
 
 
 
 //gets all employees
 router.get("/employees", verifyJwt, async (req, res) => {
+    //req.payload is from token
     try {
-        const employees = await Employees.find().sort({
+        const employees = await Employees.find({
+            ORG_ID: req.payload.email_id
+        }).sort({
             createdAt: "desc"
         })
 
         return res.status(200).send({
             success: true,
             message: "employees successfully fetched",
-            //req.payload is from token
-            data: employees.filter(employee => employee.ORG_ID === req.payload.email_id)
+            data: employees
         })
     } catch (error) {
         return res.status(400).send({
@@ -98,10 +100,20 @@ router.post("/employees/add", verifyJwt, async (req, res) => {
 
 // get one employee
 router.get("/employee/profile/:id", verifyJwt, async (req, res) => {
+
+
     try {
         const employee = await Employees.findOne({
             name_url: req.params.id
         })
+        if (employee.ORG_ID !== req.payload.email_id) {
+            return res.send({
+                success: false,
+                message: "no employee",
+                data: ""
+            })
+        }
+
         return res.status(200).send({
             success: true,
             message: "successfuly fetched employee",
@@ -109,10 +121,10 @@ router.get("/employee/profile/:id", verifyJwt, async (req, res) => {
         })
 
     } catch (err) {
-        return res.status(500).send({
+        return res.send({
             success: false,
             message: err,
-            data: {}
+            data: ""
         })
     }
 })
@@ -217,6 +229,9 @@ router.delete("/employee/remove/:id", verifyJwt, async (req, res) => {
         const employee = await Employees.findOne({
             name_url: req.params.id
         })
+        if (employee.ORG_ID !== req.payload.email_id) {
+            return null
+        }
         await employee.remove()
         return res.status(200).send({
             message: "employee removed"
@@ -319,9 +334,11 @@ router.post('/upload', multerUploads, (req, res) => {
     const data = {
         image: file,
     }
-    cloudinary.uploader.upload(data.image)
+    cloudinary.uploader.upload(data.image, {
+            quality: 30
+        })
         .then(result => {
-            res.send(result.url)
+            res.send(result.secure_url)
         })
         .catch(err => res.send(err))
 });
