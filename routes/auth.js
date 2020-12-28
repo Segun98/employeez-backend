@@ -87,7 +87,7 @@ router.post("/login", async (req, res) => {
         // })
         res.send({
             message: "successfully logged in",
-        refreshToken:createRefreshToken(user),
+            refreshToken: createRefreshToken(user),
             accesstoken: token
         })
 
@@ -99,9 +99,9 @@ router.post("/login", async (req, res) => {
 })
 
 //refresh tokens after access token expires
-router.post("/refreshtokens", cookieParser(), async (req, res) => {
+router.post("/refreshtokens", async (req, res) => {
 
-    const token = req.cookies.yeez
+    let token = req.body.token
 
     if (!token) {
         return res.status(401).send({
@@ -112,6 +112,21 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
     let payload = null
     try {
         payload = jwt.verify(token, process.env.REFRESH_SECRET)
+        const user = await Users.findOne({
+            _id: payload.user_id
+        })
+
+        if (!user) {
+            return res.status(401).send({
+                success: false,
+                accessToken: ""
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            refreshToken: createRefreshToken(user),
+            accessToken: createToken(user)
+        })
     } catch (err) {
         return res.status(401).send({
             success: false,
@@ -119,29 +134,15 @@ router.post("/refreshtokens", cookieParser(), async (req, res) => {
             err
         })
     }
-    const user = await Users.findOne({
-        _id: payload.user_id
-    })
 
-    if (!user) {
-        return res.status(401).send({
-            success: false,
-            accessToken: ""
-        })
-    }
-    let date = new Date()
-    date.setDate(date.getDate() + 7);
+    // let date = new Date()
+    // date.setDate(date.getDate() + 7);
     // res.cookie('yeez', createRefreshToken(user), {
     //     httpOnly: true,
     //     expires: date,
     //     // secure: true
     // })
 
-    return res.status(200).send({
-        success: true,
-        refreshToken:createRefreshToken(user),
-        accessToken: createToken(user)
-    })
 
 })
 
